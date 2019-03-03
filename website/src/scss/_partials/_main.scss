@@ -1,0 +1,66 @@
+$primary-background-color: #D1E5E1;
+
+body {
+  background-color: $primary-background-color;
+  font-family: Helvetica, Arial, sans-serif;
+  
+}
+
+header {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  color: #D14542;
+  font-size: 22px;
+  top: 0;
+  left: 0;
+  background-color: darken($primary-background-color, 3%);
+  border-bottom: 1px solid darken($primary-background-color, 6%);
+  
+  span {
+    align-self: center;
+  }
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: calc(100vH - 100px);
+}
+
+img {
+  margin-bottom: 3rem;
+}
+
+.user {
+  @include fa-icon;
+  @extend .fas;
+  
+  &:before {
+    content: fa-content($fa-var-user);
+  }
+}
+
+.twitter {
+  @include fa-icon;
+  @extend .fab;
+  
+  &:before {
+    content: fa-content($fa-var-twitter);
+  }
+}
+
+footer {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: darken($primary-background-color, 3%);
+  border-top: 1px solid darken($primary-background-color, 6%);
+}
