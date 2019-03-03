@@ -1,6 +1,5 @@
-
-#I did not create this awesome repo - I simply added PHP and Bootstrap to IamManchanda/gulp-webpack
-# Gulp 4 + Webpack 4 + Babel + BrowserSync + Font Awesome 5 + Bootstrap 4 + PHP
+# I did not create this awesome repo - I simply added PHP and Bootstrap to IamManchanda/gulp-webpack
+## Gulp 4 + Webpack 4 + Babel + BrowserSync + Font Awesome 5 + Bootstrap 4 + PHP
 
 All the tasks are done via Gulp. Webpack is just used for ES6 Import/Export as Gulp can't do it to my best of knowledge. Apart from ES6 Import/Export, Gulp was able to do all my other work that I wanted so I have mainly used Gulp. That being said, you can modify the webpack config to your preferences from `webpack` folder and use webpack specific plugins as you need.
 
