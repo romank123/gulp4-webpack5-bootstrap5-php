@@ -1,5 +1,6 @@
 // Node Packages
 const autoprefixer = require('autoprefixer');
+// const postcssUncss = require('postcss-uncss');
 const browserSync = require('browser-sync')
   .create();
 const connect = require('gulp-connect-php');
@@ -111,7 +112,7 @@ const buildMarkup = (mode) => (done) => {
     gulp.src(srcPath('php')),
     ...((mode === 'production') ? [gulpHtmlmin({ collapseWhitespace: true })] : []),
     gulp.dest(distPath('php', true)),
-  ], done) : undefined;
+  ], done()) : undefined;
 };
 
 // Build Images Task
@@ -128,7 +129,7 @@ const buildImages = (mode) => (done) => {
     ]),
     gulp.dest(distPath('img')),
     browserSync.stream(),
-  ], done) : undefined;
+  ], done()) : undefined;
 };
 
 // Build Styles Task
@@ -144,6 +145,7 @@ const buildStyles = (mode) => (done) => {
   
   const postcssPlugins = [
     autoprefixer(autoprefixConfig),
+    // postcssUncss({ html: [distPath('html')] }),
   ];
   
   ['development', 'production'].includes(mode) ? pump([
@@ -154,7 +156,7 @@ const buildStyles = (mode) => (done) => {
     gulpSourcemaps.write('./'),
     gulp.dest(distPath('css')),
     browserSync.stream(),
-  ], done) : undefined;
+  ], done()) : undefined;
 };
 
 // Build Scripts Task
@@ -183,7 +185,7 @@ const buildScripts = (mode) => (done) => {
     gulpSourcemaps.write('./'),
     gulp.dest(distPath('js')),
     browserSync.stream(),
-  ], done) : undefined;
+  ], done()) : undefined;
 };
 
 // Copy Fonts Task
@@ -191,7 +193,7 @@ const copyFonts = (mode) => (done) => {
   ['development', 'production'].includes(mode) ? pump([
     gulp.src(srcPath('webfonts')),
     gulp.dest(distPath('webfonts')),
-  ], done) : undefined;
+  ], done()) : undefined;
 };
 
 // Copy Libs Task
@@ -199,7 +201,7 @@ const copyLibs = (mode) => (done) => {
   ['development', 'production'].includes(mode) ? pump([
     gulp.src(srcPath('libs')),
     gulp.dest(distPath('libs')),
-  ], done) : undefined;
+  ], done()) : undefined;
 };
 
 /**
