@@ -1,66 +1,45 @@
-$primary-background-color: #D1E5E1;
-
+$primary-background-color: #E2EEEB;
 body {
   background-color: $primary-background-color;
   font-family: Helvetica, Arial, sans-serif;
-  
 }
 
-header {
-  height: 50px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  color: #D14542;
-  font-size: 22px;
-  top: 0;
-  left: 0;
-  background-color: darken($primary-background-color, 3%);
-  border-bottom: 1px solid darken($primary-background-color, 6%);
+a, a:hover {
+  transition: all .2s;
+}
+
+header.navbar {
+  a.navbar-brand {
+
+  }
   
-  span {
-    align-self: center;
+  ul.navbar-nav {
+    li.nav-item {
+      a.nav-link:not(.disabled) {
+        color: $dark;
+        
+        &:hover {
+          color: $danger;
+        }
+      }
+    }
   }
 }
 
 main {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  min-height: calc(100vH - 100px);
+  padding: calc(1em + 56px) 0;
 }
 
-img {
-  margin-bottom: 3rem;
-}
-
-.user {
-  @include fa-icon;
-  @extend .fas;
-  
-  &:before {
-    content: fa-content($fa-var-user);
+footer.navbar {
+  ul.nav {
+    li.nav-item {
+      a.nav-link {
+        color: $dark;
+        
+        &:hover {
+          color: $danger;
+        }
+      }
+    }
   }
-}
-
-.twitter {
-  @include fa-icon;
-  @extend .fab;
-  
-  &:before {
-    content: fa-content($fa-var-twitter);
-  }
-}
-
-footer {
-  width: 100%;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: darken($primary-background-color, 3%);
-  border-top: 1px solid darken($primary-background-color, 6%);
 }

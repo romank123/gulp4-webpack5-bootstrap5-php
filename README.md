@@ -1,5 +1,5 @@
-# I did not create this awesome repo - I simply added PHP and Bootstrap to IamManchanda/gulp-webpack
-## Gulp 4 + Webpack 4 + Babel + BrowserSync + Font Awesome 5 + Bootstrap 4 + PHP
+# Inspired by IamManchanda/gulp-webpack
+## Gulp 4 + Webpack 5 + Bootstrap 5 + Bootstrap Icons + PHP
 
 All the tasks are done via Gulp. Webpack is just used for ES6 Import/Export as Gulp can't do it to my best of knowledge. Apart from ES6 Import/Export, Gulp was able to do all my other work that I wanted so I have mainly used Gulp. That being said, you can modify the webpack config to your preferences from `webpack` folder and use webpack specific plugins as you need.
 
@@ -27,15 +27,8 @@ Important Note: **Don't** run these npm scripts simultaneously.
 ## Appendix
 
 - **Tooling** - Gulpfile Lives in `gulpfile.js` and Webpack config files live within `webpack` folder.
-- **Source Files** - Lives in `public/src` folder
-- **Compiled Files** - Lives in `public/dist` folder. When you clone, you won't get them but as soon as you run those any of above usage tasks (start/build/export), the `public/dist` will be created.
-- **Exported Project** - The exported project is imported from `public` folder and gets exported as `website.zip` to project root
+- **Source Files** - Lives in `website/src` folder
+- **Compiled Files** - Lives in `website/dist` folder. 
+- **Exported Project** - The exported project gets saved as `website.zip` to project root.
 
-## Performance (Lighthouse)
 
-This is the result of performance tests (97%) within [Lighthouse](https://developers.google.com/web/tools/lighthouse/) for Production Mode. It's Not excellent (yet!), but still quite good actually.
-![97% Performance][perf]
-
-For Development mode it's [96% respectively](https://i.imgur.com/07TVen7.png).
-
-[perf]: https://i.imgur.com/1KBt91t.png
