@@ -1,11 +1,12 @@
-// Node Packages
 const autoprefixer = require('autoprefixer');
 const browserSync = require('browser-sync').create();
-const connect = require('gulp-connect-php');
+const gulpPHP = require('gulp-connect-php');
+const cssnano = require('cssnano');
+const del = require('del');
 const gulp = require('gulp');
 const gulpBabel = require('gulp-babel');
 const gulpPostcss = require('gulp-postcss');
-const gulpSass = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
 const gulpSourcemaps = require('gulp-sourcemaps');
 const gulpUglify = require('gulp-uglify');
 const gulpZip = require('gulp-zip');
@@ -22,69 +23,71 @@ const entry = require('./webpack/entry');
 const entryArray = Object.values(entry);
 
 // Paths for reuse
-const exportPath = './website/dist/**/*';
+const exportPath = './web/**/*';
+
 const srcPath = (file, watch = false) => {
   if (file === 'scss' && watch === false) {
-    console.log(file, 'false');
-    return './website/src/scss/index.scss';
+    return './src/scss/index.scss';
   }
   if (file === 'scss' && watch === true) {
-    console.log(file, 'true');
-    return './website/src/scss/**/*.scss';
+    return './src/scss/**/*.scss';
   }
   if (file === 'js' && watch === false) {
     return entryArray;
   }
   if (file === 'js' && watch === true) {
-    return './website/src/js/**/*.js';
+    return './src/js/**/*.js';
   }
   if (file === 'php') {
-    return './website/dist/**/*.php';
+    return './web/**/*.php';
   }
-  if (file === 'webfonts') {
-    return './node_modules/@fortawesome/fontawesome-free/webfonts/**/*.{eot,ttf,woff,woff2,eof,svg}';
+  if (file === 'img') {
+    return './web/img/**/*';
   }
   console.error('Unsupported file type entered into Gulp Task Runner for Source Path');
 };
+
 const distPath = (file, serve = false) => {
-  if (['css', 'js'].includes(file)) {
-    return `./website/dist/${file}`;
+  if (['css', 'js', 'img'].includes(file)) {
+    return `./web/${file}`;
   }
+  
   if (file === 'php' && serve === false) {
-    return './website/dist/**/*.php';
+    return './web/**/*.php';
   }
   if (file === 'php' && serve === true) {
-    return './website/dist';
-  }
-  if (file === 'webfonts') {
-    return './website/dist/webfonts';
+    return './web';
   }
   console.error('Unsupported file type entered into Gulp Task Runner for Dist Path');
 };
 
-/**
- * Building Tasks
- */
+// Clean the zip file
+// Clean the zip file
+// Clean the zip file
+const cleanExport = (mode) => () => {
+  return ['development', 'production'].includes(mode) ? del(['./zip'], { force: true }) : undefined;
+};
 
 // Build Styles Task
+// Build Styles Task
+// Build Styles Task
 const buildStyles = (mode) => (done) => {
-  const postcssPlugins = [
-    autoprefixer({
-      cascade: false,
-    }),
-  ];
-  let outputStyle;
+  let postcssPlugins;
   if (mode === 'development') {
-    outputStyle = 'nested';
+    postcssPlugins = [
+      autoprefixer(),
+    ];
   } else if (mode === 'production') {
-    outputStyle = 'compressed';
-  } else {
-    outputStyle = undefined;
+    postcssPlugins = [
+      cssnano(),
+      autoprefixer(),
+    ];
   }
+  
   ['development', 'production'].includes(mode) ? pump([
-    gulp.src(srcPath('scss'), { allowEmpty: true }),
+    gulp.src(srcPath('scss')),
     gulpSourcemaps.init({ loadMaps: true }),
-    gulpSass({ outputStyle }),
+    sass().on('error', sass.logError),
     gulpPostcss(postcssPlugins),
     gulpSourcemaps.write('./'),
     gulp.dest(distPath('css')),
@@ -93,18 +96,20 @@ const buildStyles = (mode) => (done) => {
 };
 
 // Build Scripts Task
+// Build Scripts Task
+// Build Scripts Task
 const buildScripts = (mode) => (done) => {
   let streamMode;
   if (mode === 'development') {
-    streamMode = require('./webpack/config.development.js');
+    streamMode = require('./webpack/config.development');
   } else if (mode === 'production') {
-    streamMode = require('./webpack/config.production.js');
+    streamMode = require('./webpack/config.production');
   } else {
     streamMode = undefined;
   }
   
   ['development', 'production'].includes(mode) ? pump([
-    gulp.src(srcPath('js')),
+    gulp.src(srcPath('js'), { allowEmpty: true }),
     vinylNamed(),
     webpackStream(streamMode, webpack),
     gulpSourcemaps.init({ loadMaps: true }),
@@ -125,14 +130,6 @@ const buildScripts = (mode) => (done) => {
   ], done) : undefined;
 };
 
-// Copy Fonts Task
-const copyFonts = (mode) => (done) => {
-  ['development', 'production'].includes(mode) ? pump([
-    gulp.src(srcPath('webfonts')),
-    gulp.dest(distPath('webfonts')),
-  ], done()) : undefined;
-};
-
 // Generic Task
 const genericTask = (mode, context = 'building') => {
   let port;
@@ -151,14 +148,13 @@ const genericTask = (mode, context = 'building') => {
   
   // Combine all booting tasks into one array!
   const allBootingTasks = [
-    Object.assign(copyFonts(mode), { displayName: `Booting Copy Fonts Task: Build - ${modeName}` }),
-    Object.assign(buildStyles(mode), { displayName: `Booting Styles Task: Build - ${modeName}` }),
-    Object.assign(buildScripts(mode), { displayName: `Booting Scripts Task: Build - ${modeName}` }),
+    Object.assign(buildStyles(mode), { displayName: `Build styles - ${modeName}` }),
+    Object.assign(buildScripts(mode), { displayName: `Build scripts - ${modeName}` }),
   ];
   
   // Browser Loading & Watching
   const browserLoadingWatching = (done) => {
-    connect.server({
+    gulpPHP.server({
       base: distPath('php', true),
       port: 8010,
       keepalive: true,
@@ -167,22 +163,33 @@ const genericTask = (mode, context = 'building') => {
       proxy: '127.0.0.1:8010',
       port,
     });
+    done();
+    
+    // Watch - php
+    gulp.watch(srcPath('php', true)).on('change', () => {
+      browserSync.reload();
+    });
+    done();
     
     // Watch - Styles
-    gulp.watch(srcPath('php', true))
-      .on('all', browserSync.reload);
-    
-    // Watch - Styles
-    gulp.watch(srcPath('scss', true))
-      .on('all', gulp.series(
-        Object.assign(buildStyles(mode), { displayName: `Watching Styles Task: Build - ${modeName}` }),
-      ), browserSync.reload);
+    gulp.watch(srcPath('scss', true)).on('all', gulp.series(
+      Object.assign(buildStyles(mode), { displayName: `Watching Styles Task: Build - ${modeName}` }),
+      browserSync.stream,
+    ));
+    done();
     
     // Watch - Scripts
-    gulp.watch(srcPath('js', true))
-      .on('all', gulp.series(
-        Object.assign(buildScripts(mode), { displayName: `Watching Scripts Task: Build - ${modeName}` }),
-      ), browserSync.reload);
+    gulp.watch(srcPath('js', true), { allowEmpty: true }).on('all', gulp.series(
+      Object.assign(buildScripts(mode), { displayName: `Watching Scripts Task: Build - ${modeName}` }),
+      browserSync.reload,
+    ));
+    done();
+    
+    // Watch - images
+    gulp.watch(srcPath('img', true)).on('change', () => {
+      browserSync.reload();
+    });
+    done();
   };
   
   // Exporting Zip
@@ -191,7 +198,7 @@ const genericTask = (mode, context = 'building') => {
       gulp.src(exportPath),
       gulpZip('./website.zip'),
       gulp.dest('./'),
-    ], done);
+    ], done());
   };
   
   // Returning Tasks based on Building Context
@@ -205,24 +212,15 @@ const genericTask = (mode, context = 'building') => {
   // Returning Tasks based on Exporting Context
   if (context === 'exporting') {
     return [
-      ...allBootingTasks,
+      cleanExport(mode),
       Object.assign(exportingZip, { displayName: `Exporting Zip Task - ${modeName}` }),
     ];
   }
   
-  // No Side-Effects Please
   return undefined;
 };
 
-/**
- * Main Gulp Build/Export Tasks that are inserted within `package.json`
- */
-
-// Default (`npm start` or `yarn start`) => Production
-gulp.task('default', gulp.series(...genericTask('production', 'building')));
-
-// Dev (`npm run dev` or `yarn run dev`) => Development
+gulp.task('default', gulp.series(...genericTask('development', 'building')));
 gulp.task('dev', gulp.series(...genericTask('development', 'building')));
-
-// Export (`npm run export` or `yarn run export`)
+gulp.task('prod', gulp.series(...genericTask('production', 'building')));
 gulp.task('export', gulp.series(...genericTask('production', 'exporting')));

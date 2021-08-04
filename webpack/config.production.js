@@ -1,5 +1,3 @@
-// You can add other webpack configuration (plugins, loaders, etc).
-// Apart from ES6 Import/Export, Gulp was able to do all my other work so this file is mainly empty.
 const TerserPlugin = require('terser-webpack-plugin');
 const entry = require('./entry');
 
@@ -17,6 +15,18 @@ module.exports = {
         test: /\.js(\?.*)?$/i,
         extractComments: false,
       }),
+    ],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader',
+      },
     ],
   },
 };

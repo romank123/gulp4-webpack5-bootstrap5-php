@@ -1,0 +1,59 @@
+$primary-background-color: #E2EEEB;
+body {
+  background-color: $primary-background-color;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+a, a:hover {
+  transition: all .2s;
+}
+
+header.navbar {
+  a.navbar-brand {
+  }
+  
+  ul.navbar-nav {
+    li.nav-item {
+      a.nav-link:not(.disabled) {
+        color: $dark;
+        
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+  }
+  
+  .topbar-search {
+    display: flex;
+    flex-grow: 1;
+    
+    input.form-control {
+      max-width: 280px;
+      margin: 0 10px 0 auto;
+    }
+  }
+}
+
+main {
+  padding: calc(1em + 56px) 0;
+}
+
+h1.icon {
+  font-size: 72px;
+  color: $dark;
+}
+
+footer.navbar {
+  ul.nav {
+    li.nav-item {
+      a.nav-link {
+        color: $dark;
+        
+        &:hover {
+          color: $danger;
+        }
+      }
+    }
+  }
+}

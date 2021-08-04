@@ -1,0 +1,10 @@
+.modal.show {
+  min-height: 100vh;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.modal-dialog {
+  min-width: 320px;
+}

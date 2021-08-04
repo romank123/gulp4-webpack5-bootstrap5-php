@@ -5,7 +5,7 @@ module.exports = {
   },
   extends: 'airbnb-base',
   rules: {
-    // Personal Preferences below ... proffessionally may change 
+    // Personal Preferences below ... proffessionally may change
     'arrow-body-style': 0,
     'arrow-parens': 0,
     'func-names': 0,
@@ -30,5 +30,6 @@ module.exports = {
     'no-alert': 0,
     'no-console': 0,
     'no-debugger': 0,
+    'no-multiple-empty-lines': 0,
   },
 };
